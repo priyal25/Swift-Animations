@@ -16,28 +16,33 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupLayers()
+        startAnimation()
+    }
+    
+    func setupLayers() {
         zerolayer.backgroundColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 0.8).cgColor
         zerolayer.frame = CGRect(x: 150, y: 200, width: 100, height: 100)
-//        layer.cornerRadius = 100
+        zerolayer.cornerRadius = zerolayer.frame.width/2
         
         layer.backgroundColor = UIColor(red: 1.0, green: 0, blue: 0, alpha: 0.9).cgColor
         layer.frame = CGRect(x: 100, y: 150, width: 200, height: 200)
-        layer.cornerRadius = 100
+        layer.cornerRadius =  layer.frame.width/2
 
         bigLayer.backgroundColor = UIColor(red: 1.0, green: 0, blue: 0, alpha: 0.4).cgColor
         bigLayer.frame =  CGRect(x: 50, y: 100, width: 300, height: 300)
-        bigLayer.cornerRadius = 150
+        bigLayer.cornerRadius =  bigLayer.frame.width/2
 
         thirdLayer.backgroundColor = UIColor(red: 1.0, green: 0, blue: 0, alpha: 0.3).cgColor
         thirdLayer.frame =  CGRect(x: 25, y: 75, width: 350, height: 350)
-        thirdLayer.cornerRadius = 175
+        thirdLayer.cornerRadius =  thirdLayer.frame.width/2
         
         view.layer.addSublayer(layer)
         view.layer.addSublayer(bigLayer)
         view.layer.addSublayer(thirdLayer)
-//        view.layer.addSublayer(zerolayer)
-        
+    }
+    
+    func startAnimation(){
         DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
             self.zeroMoveTransition()
             self.firstOpacityAnimation()
@@ -45,19 +50,14 @@ class ViewController: UIViewController {
         })
     }
     
+    
     func zeroMoveTransition() {
         let animation = CABasicAnimation(keyPath: "position")
         animation.fromValue = CGPoint(x: layer.frame.origin.x + layer.frame.width/2 , y: layer.frame.origin.y + layer.frame.width/2)
         animation.toValue = CGPoint(x: view.frame.width, y: view.frame.height * 0.5)
-        animation.duration = 2
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        animation.beginTime = CACurrentMediaTime()
+        animation.setDefaultValues()
+        animation.addAnimationTo([layer, bigLayer, thirdLayer])
         
-        layer.add(animation, forKey: nil)
-        bigLayer.add(animation, forKey: nil)
-        thirdLayer.add(animation, forKey: nil)
-        zerolayer.add(animation, forKey: nil)
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
             self.secondMoveTransition()
             self.secondOpacity()
@@ -69,15 +69,8 @@ class ViewController: UIViewController {
         let animation = CABasicAnimation(keyPath: "position")
         animation.fromValue = CGPoint(x: layer.frame.origin.x + layer.frame.width/2 , y: layer.frame.origin.y)
         animation.toValue = CGPoint(x: view.frame.width, y: view.frame.height * 0.5)
-        animation.duration = 2
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        animation.beginTime = CACurrentMediaTime()
-        
-        layer.add(animation, forKey: nil)
-        bigLayer.add(animation, forKey: nil)
-        thirdLayer.add(animation, forKey: nil)
-        zerolayer.add(animation, forKey: nil)
+        animation.setDefaultValues()
+        animation.addAnimationTo([layer, bigLayer, thirdLayer])
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
             self.secondMoveTransition()
             self.secondOpacity()
@@ -88,31 +81,16 @@ class ViewController: UIViewController {
         let secondTransition = CABasicAnimation(keyPath: "opacity")
         secondTransition.fromValue = 1
         secondTransition.toValue = 0.1
-        secondTransition.beginTime = CACurrentMediaTime()
-        secondTransition.duration = 2
-        secondTransition.fillMode = .forwards
-        secondTransition.isRemovedOnCompletion = false
-        layer.add(secondTransition, forKey: nil)
-        bigLayer.add(secondTransition, forKey: nil)
-        thirdLayer.add(secondTransition, forKey: nil)
-        zerolayer.add(secondTransition, forKey: nil)
-
+        secondTransition.setDefaultValues()
+        secondTransition.addAnimationTo([layer, bigLayer, thirdLayer, zerolayer])
     }
     
     func secondMoveTransition() {
         let animation = CABasicAnimation(keyPath: "position")
         animation.fromValue = CGPoint(x: view.frame.width, y: view.frame.height * 0.5)
         animation.toValue = CGPoint(x: view.frame.width/2, y: view.frame.height)
-        animation.duration = 2
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        animation.beginTime = CACurrentMediaTime()
-        
-        layer.add(animation, forKey: nil)
-        bigLayer.add(animation, forKey: nil)
-        thirdLayer.add(animation, forKey: nil)
-        zerolayer.add(animation, forKey: nil)
-        
+        animation.setDefaultValues()
+        animation.addAnimationTo([layer, bigLayer, thirdLayer, zerolayer])
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
             self.thirdMoveTransition()
             self.thirdOpacity()
@@ -123,29 +101,16 @@ class ViewController: UIViewController {
         let secondTransition = CABasicAnimation(keyPath: "opacity")
         secondTransition.fromValue =  0.1
         secondTransition.toValue = 1
-        secondTransition.beginTime = CACurrentMediaTime()
-        secondTransition.duration = 2
-        secondTransition.fillMode = .forwards
-        secondTransition.isRemovedOnCompletion = false
-        layer.add(secondTransition, forKey: nil)
-        bigLayer.add(secondTransition, forKey: nil)
-        thirdLayer.add(secondTransition, forKey: nil)
-        zerolayer.add(secondTransition, forKey: nil)
-
+        secondTransition.setDefaultValues()
+        secondTransition.addAnimationTo([layer, bigLayer, thirdLayer, zerolayer])
     }
     
     func thirdMoveTransition() {
         let animation = CABasicAnimation(keyPath: "position")
         animation.fromValue = CGPoint(x: view.frame.width/2, y: view.frame.height)
         animation.toValue = CGPoint(x: view.frame.origin.x, y: view.frame.height/2)
-        animation.duration = 2
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        animation.beginTime = CACurrentMediaTime()
-        layer.add(animation, forKey: nil)
-        bigLayer.add(animation, forKey: nil)
-        thirdLayer.add(animation, forKey: nil)
-        zerolayer.add(animation, forKey: nil)
+        animation.setDefaultValues()
+        animation.addAnimationTo([layer, bigLayer, thirdLayer, zerolayer])
 
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
             self.fourthOpacity()
@@ -157,29 +122,16 @@ class ViewController: UIViewController {
         let secondTransition = CABasicAnimation(keyPath: "opacity")
         secondTransition.fromValue =  1
         secondTransition.toValue = 0.1
-        secondTransition.beginTime = CACurrentMediaTime()
-        secondTransition.duration = 2
-        secondTransition.fillMode = .forwards
-        secondTransition.isRemovedOnCompletion = false
-        layer.add(secondTransition, forKey: nil)
-        bigLayer.add(secondTransition, forKey: nil)
-        thirdLayer.add(secondTransition, forKey: nil)
-        zerolayer.add(secondTransition, forKey: nil)
+        secondTransition.setDefaultValues()
+        secondTransition.addAnimationTo([layer, bigLayer, thirdLayer, zerolayer])
     }
     
     func fourthMoveTransition()  {
         let animation = CABasicAnimation(keyPath: "position")
         animation.fromValue = CGPoint(x: view.frame.origin.x, y: view.frame.height/2)
         animation.toValue =  CGPoint(x: layer.frame.origin.x + layer.frame.width/2 , y: layer.frame.origin.y)
-        animation.duration = 2
-        animation.fillMode = .forwards
-        animation.isRemovedOnCompletion = false
-        animation.beginTime = CACurrentMediaTime()
-        layer.add(animation, forKey: nil)
-        bigLayer.add(animation, forKey: nil)
-        thirdLayer.add(animation, forKey: nil)
-        zerolayer.add(animation, forKey: nil)
-
+        animation.setDefaultValues()
+        animation.addAnimationTo([layer, bigLayer, thirdLayer, zerolayer])
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2, execute: {
             self.firstMoveTransition()
             self.firstOpacityAnimation()
@@ -191,14 +143,8 @@ class ViewController: UIViewController {
         let secondTransition = CABasicAnimation(keyPath: "opacity")
         secondTransition.fromValue =  0.1
         secondTransition.toValue = 1
-        secondTransition.beginTime = CACurrentMediaTime()
-        secondTransition.duration = 2
-        secondTransition.fillMode = .forwards
-        secondTransition.isRemovedOnCompletion = false
-        layer.add(secondTransition, forKey: nil)
-        bigLayer.add(secondTransition, forKey: nil)
-        thirdLayer.add(secondTransition, forKey: nil)
-        zerolayer.add(secondTransition, forKey: nil)
+        secondTransition.setDefaultValues()
+        secondTransition.addAnimationTo([layer, bigLayer, thirdLayer, zerolayer])
     }
     
     func rotateAnimation() {
@@ -214,3 +160,18 @@ class ViewController: UIViewController {
     }
 }
 
+extension CABasicAnimation {
+    
+    func setDefaultValues(duration: CFTimeInterval = 2, fillMode: CAMediaTimingFillMode = .forwards, removedOnCompletion: Bool = false, startTime: CFTimeInterval = CACurrentMediaTime()) {
+        self.fillMode = fillMode
+        self.duration = duration
+        self.isRemovedOnCompletion = removedOnCompletion
+        self.beginTime = startTime
+    }
+    
+    func addAnimationTo(_ layers: [CALayer]) {
+        for layer in layers {
+            layer.add(self, forKey: nil)
+        }
+    }
+}
